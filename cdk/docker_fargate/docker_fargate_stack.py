@@ -3,6 +3,7 @@ from aws_cdk import (Stack,
 	aws_ec2 as ec2, aws_ecs as ecs,
 	aws_ecs_patterns as ecs_patterns,
 	aws_ssm as ssm,
+	Duration,
 	Tags)
 
 import os
@@ -33,7 +34,7 @@ def create_id() -> str:
 
 
 CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
-ENV_NAME = "ENV" # name of env as seen in container
+ENV_NAME = "ENV"
 
 def get_vpc_name() -> str:
     return get_required_env(STACK_NAME_PREFIX)+VPC_SUFFIX
@@ -76,8 +77,8 @@ class DockerFargateStack(Stack):
         cluster = ecs.Cluster(self, get_cluster_name(), vpc=vpc, container_insights=True)
 
         secrets = {
-        # uncomment the following to add a secret as an environment variable
-        #	SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
+        	# uncomment the following to add a secret as an environment variable
+        	# SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
         }
 
         env_vars = {}
@@ -103,8 +104,15 @@ class DockerFargateStack(Stack):
             task_image_options=task_image_options,
             memory_limit_mib=1024,      # Default is 512
             public_load_balancer=True)  # Default is False
-            #redirect_http=True) #TODO adding this causes the error,
-            #"The HTTPS protocol must be used when redirecting HTTP traffic"
+            # TODO TLS
+            #protocol=elbv2.ApplicationProtocol.HTTPS,
+            #domain_name="TBD", # The domain name for the service, e.g. “api.example.com.”
+            #domain_zone="TBD") #  The Route53 hosted zone for the domain, e.g. “example.com.”
+            
+            
+        # Overriding health check timeout helps with sluggishly responding app's (e.g. Shiny)
+        # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup    
+        load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
 
         if False: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(

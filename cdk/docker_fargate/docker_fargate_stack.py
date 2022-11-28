@@ -78,7 +78,7 @@ class DockerFargateStack(Stack):
 
         secrets = {
         	# uncomment the following to add a secret as an environment variable
-        	# SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
+        	SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
         }
 
         env_vars = {}

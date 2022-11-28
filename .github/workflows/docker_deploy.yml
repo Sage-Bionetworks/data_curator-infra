@@ -7,11 +7,11 @@ on:
   push:
 
 env:
-  IMAGE_PATH_AND_TAG: ghcr.io/application-repository:release-1.0
+  IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:schematic-rest-api
   AWS_DEFAULT_REGION: 'us-east-1' 
-  PORT: 3838
+  PORT: 8100
   COST_CENTER: "NO PROGRAM / 000000"
-  STACK_NAME_PREFIX: application-repository
+  STACK_NAME_PREFIX: dca-test
   CONTAINER_ENV: example
  
 
@@ -32,7 +32,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
-          role-to-assume: arn:aws:iam::<account-number>:role/<role-name>
+          role-to-assume: arn:aws:iam::631692904429:role/meta-cdk-role
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
           

@@ -50,7 +50,6 @@ jobs:
           working_dir: 'cdk'
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
-          R_CONFIG_ACTIVE: $R_CONFIG_ACTIVE
  
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
@@ -61,4 +60,3 @@ jobs:
           actions_comment: false
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
-          R_CONFIG_ACTIVE: ${{ env.R_CONFIG_ACTIVE }} 

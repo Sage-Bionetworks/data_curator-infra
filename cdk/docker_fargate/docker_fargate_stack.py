@@ -39,8 +39,8 @@ def create_id() -> str:
     return get_required_env(STACK_NAME_PREFIX)+ID_SUFFIX
 
 
-CONTAINER_ENV = "R_CONFIG_ACTIVE" # name of env passed from GitHub action
-ENV_NAME = "R_CONFIG_ACTIVE"
+CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
+ENV_NAME = "ENV"
 
 def get_vpc_name() -> str:
     return get_required_env(STACK_NAME_PREFIX)+VPC_SUFFIX

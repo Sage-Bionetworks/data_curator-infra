@@ -7,7 +7,7 @@ on:
   push:
 
 env:
-  IMAGE_PATH_AND_TAG: ghcr.io/afwillia/data_curator:0.1.6-beta
+  IMAGE_PATH_AND_TAG: ghcr.io/afwillia/data_curator:0.1.8-beta
   AWS_DEFAULT_REGION: 'us-east-1' 
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"

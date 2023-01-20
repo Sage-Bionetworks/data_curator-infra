@@ -7,7 +7,7 @@ on:
   push:
 
 env:
-  IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.3-beta
+  IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.4-beta
   AWS_DEFAULT_REGION: 'us-east-1' 
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"

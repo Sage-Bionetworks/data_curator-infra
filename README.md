@@ -30,7 +30,7 @@ Create an IAM Role in the target AWS account with sufficient permissions for dep
 }
 ```
 
-Edit `.github/workflows/docker_deploy.yml`, setting the parameters listed under `env`, including the choice of 
+Edit `.github/workflows/docker_deploy.yml`, setting the parameters listed under `env`, including the choice of
 container (and version) to deploy. Enter the ARN of the IAM Role mentioned above in the `role-to-assume` field.
 
 

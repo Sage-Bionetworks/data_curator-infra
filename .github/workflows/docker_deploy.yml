@@ -4,7 +4,11 @@
 name: Deploy to AWS
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "validate" ]
+    branches: [master]
+    types:
+      - completed
 
 env:
   IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.7-beta

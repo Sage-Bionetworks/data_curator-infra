@@ -149,4 +149,5 @@ class DockerFargateStack(Stack):
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
-        Tags.of(load_balanced_fargate_service).add(COST_CENTER_TAG_NAME, get_cost_center())
+        # Tag all resources in this Stack's scope with a cost center tag
+        Tags.of(scope).add(COST_CENTER_TAG_NAME, get_cost_center())

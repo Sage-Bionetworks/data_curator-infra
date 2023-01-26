@@ -1,13 +1,13 @@
 
 from aws_cdk import (Stack,
-	aws_ec2 as ec2, 
-	aws_ecs as ecs,
-	aws_ecs_patterns as ecs_patterns,
-	aws_ssm as ssm,
-	aws_elasticloadbalancingv2 as elbv2,
-	aws_route53 as r53,
-	Duration,
-	Tags)
+    aws_ec2 as ec2,
+    aws_ecs as ecs,
+    aws_ecs_patterns as ecs_patterns,
+    aws_ssm as ssm,
+    aws_elasticloadbalancingv2 as elbv2,
+    aws_route53 as r53,
+    Duration,
+    Tags)
 
 import os
 import aws_cdk.aws_secretsmanager as sm
@@ -73,13 +73,13 @@ def create_secret(scope: Construct, name: str) -> str:
     # see also: ecs.Secret.from_ssm_parameter(ssm.IParameter(parameter_name=name))
 
 def get_hosted_zone_name() -> str:
-	return os.getenv(HOSTED_ZONE_NAME)
-	
+    return os.getenv(HOSTED_ZONE_NAME)
+
 def get_hosted_zone_id() -> str:
-	return os.getenv(HOSTED_ZONE_ID)
-	
+    return os.getenv(HOSTED_ZONE_ID)
+
 def get_host_name() -> str:
-	return os.getenv(HOST_NAME)
+    return os.getenv(HOST_NAME)
 
 class DockerFargateStack(Stack):
 
@@ -92,7 +92,7 @@ class DockerFargateStack(Stack):
         cluster = ecs.Cluster(self, get_cluster_name(), vpc=vpc, container_insights=True)
 
         secrets = {
-        	SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
+            SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
         }
 
         env_vars = {}
@@ -101,14 +101,14 @@ class DockerFargateStack(Stack):
             env_vars[ENV_NAME]=container_env
 
         task_image_options = ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-    	    	   image=ecs.ContainerImage.from_registry(get_docker_image_name()),
-    	    	   environment=env_vars,
-    	    	   secrets = secrets,
-    	    	   container_port = get_port())
-        
+                   image=ecs.ContainerImage.from_registry(get_docker_image_name()),
+                   environment=env_vars,
+                   secrets = secrets,
+                   container_port = get_port())
+
         zone = r53.PublicHostedZone.from_public_hosted_zone_attributes(self, id=stack_id+"_zone", hosted_zone_id=get_hosted_zone_id(), zone_name=get_hosted_zone_name())
 
- 
+
         #
         # for options to pass to ApplicationLoadBalancedTaskImageOptions see:
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_ecs_patterns/ApplicationLoadBalancedTaskImageOptions.html#aws_cdk.aws_ecs_patterns.ApplicationLoadBalancedTaskImageOptions
@@ -124,10 +124,10 @@ class DockerFargateStack(Stack):
             # TLS:
             protocol=elbv2.ApplicationProtocol.HTTPS,
             domain_name=get_host_name(), # The domain name for the service, e.g. “api.example.com.”
-            domain_zone=zone) #  The Route53 hosted zone for the domain, e.g. “example.com.”            
-            
+            domain_zone=zone) #  The Route53 hosted zone for the domain, e.g. “example.com.”
+
         # Overriding health check timeout helps with sluggishly responding app's (e.g. Shiny)
-        # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup    
+        # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
         load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
 
         if False: # enable/disable autoscaling
@@ -138,12 +138,12 @@ class DockerFargateStack(Stack):
 
             # Add more capacity when CPU utilization reaches 50%
             scalable_target.scale_on_cpu_utilization("CpuScaling",
-            	target_utilization_percent=50
+                target_utilization_percent=50
             )
 
             # Add more capacity when memory utilization reaches 50%
             scalable_target.scale_on_memory_utilization("MemoryScaling",
-            	target_utilization_percent=50
+                target_utilization_percent=50
             )
 
             # Other metrics to drive scaling are discussed here:

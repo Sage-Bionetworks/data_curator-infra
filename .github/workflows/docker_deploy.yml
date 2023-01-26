@@ -4,18 +4,22 @@
 name: Deploy to AWS
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "validate" ]
+    branches: [master]
+    types:
+      - completed
 
 env:
   IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.7-beta
-  AWS_DEFAULT_REGION: 'us-east-1' 
+  AWS_DEFAULT_REGION: 'us-east-1'
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"
   STACK_NAME_PREFIX: dca-test
   HOST_NAME: dca.dnt-dev.sagebase.org
   HOSTED_ZONE_NAME: dnt-dev.sagebase.org
   HOSTED_ZONE_ID: Z0441843EAHKE7DR12AX
- 
+
 
 jobs:
   cdk-deploy:
@@ -28,7 +32,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-          
+
         # Authenticate to AWS using GitHub OIDC
       - name: Assume AWS Role
         uses: aws-actions/configure-aws-credentials@v1
@@ -37,7 +41,7 @@ jobs:
           role-to-assume: arn:aws:iam::631692904429:role/meta-cdk-role
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
-          
+
       - name: Log in to registry
         # This is where you will update the personal access token to GITHUB_TOKEN
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
@@ -50,7 +54,7 @@ jobs:
           working_dir: 'cdk'
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
- 
+
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:

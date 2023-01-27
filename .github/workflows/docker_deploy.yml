@@ -10,6 +10,9 @@ on:
     types:
       - completed
 
+concurrency:
+  group: ${{ github.workflow }}
+
 env:
   IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.7-beta
   AWS_DEFAULT_REGION: 'us-east-1'

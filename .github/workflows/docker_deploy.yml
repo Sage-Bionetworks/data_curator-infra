@@ -38,7 +38,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
-          role-to-assume: arn:aws:iam::631692904429:role/meta-cdk-role
+          role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-1KD3QGJEFWP7M
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
 

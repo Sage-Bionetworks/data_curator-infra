@@ -39,8 +39,8 @@ Edit `cdk/docker_fargate/docker_fargate_stack.py` as desired to set parameters l
 Push the changes to your repo'. This will initiate the workflow and deploy the application.
 
 ## Testing
-As a pre-deployment step we syntatically validate our sceptre and
-cloudformation yaml files with [pre-commit](https://pre-commit.com).
+As a pre-deployment step we syntatically validate the CDK json, yaml and
+python files with [pre-commit](https://pre-commit.com).
 
 Please install pre-commit, once installed the file validations will
 automatically run on every commit.  Alternatively you can manually

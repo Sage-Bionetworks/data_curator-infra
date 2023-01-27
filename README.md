@@ -37,3 +37,13 @@ container (and version) to deploy. Enter the ARN of the IAM Role mentioned above
 Edit `cdk/docker_fargate/docker_fargate_stack.py` as desired to set parameters like number of containers, CPU, memory, and to set up auto-scaling.
 
 Push the changes to your repo'. This will initiate the workflow and deploy the application.
+
+## Testing
+As a pre-deployment step we syntatically validate our sceptre and
+cloudformation yaml files with [pre-commit](https://pre-commit.com).
+
+Please install pre-commit, once installed the file validations will
+automatically run on every commit.  Alternatively you can manually
+execute the validations by running `pre-commit run --all-files`.
+Please install pre-commit, once installed the file validations will
+automatically run on every commit.

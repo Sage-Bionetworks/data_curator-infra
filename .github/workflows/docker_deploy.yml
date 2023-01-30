@@ -15,7 +15,7 @@ concurrency:
 
 env:
   IMAGE_PATH_AND_TAG: ghcr.io/data_curator/0.2.8-beta
-  AWS_DEFAULT_REGION: 'us-east-1' 
+  AWS_DEFAULT_REGION: 'us-east-1'
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"
   STACK_NAME_PREFIX: dca-test
@@ -44,7 +44,7 @@ jobs:
           role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-1KD3QGJEFWP7M
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
-          
+
         # https://github.com/marketplace/actions/aws-cdk-github-actions
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2

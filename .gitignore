@@ -133,3 +133,6 @@ dmypy.json
 .pytype/
 
 .project
+
+# jetbrains
+.idea

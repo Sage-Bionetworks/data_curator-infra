@@ -4,7 +4,14 @@
 name: Deploy to AWS
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "validate" ]
+    branches: [main]
+    types:
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}
 
 env:
   IMAGE_PATH_AND_TAG: ghcr.io/afwillia/data_curator:0.1.9-beta
@@ -15,7 +22,7 @@ env:
   HOST_NAME: dca.dnt-dev.sagebase.org
   HOSTED_ZONE_NAME: dnt-dev.sagebase.org
   HOSTED_ZONE_ID: Z0441843EAHKE7DR12AX
- 
+
 
 jobs:
   cdk-deploy:
@@ -28,13 +35,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-          
+
         # Authenticate to AWS using GitHub OIDC
       - name: Assume AWS Role
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
-          role-to-assume: arn:aws:iam::631692904429:role/meta-cdk-role
+          role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-1KD3QGJEFWP7M
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
           
@@ -46,7 +53,7 @@ jobs:
           working_dir: 'cdk'
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
- 
+
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:

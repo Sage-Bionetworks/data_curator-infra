@@ -7,7 +7,7 @@ on:
   push:
 
 env:
-  IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.7-beta
+  IMAGE_PATH_AND_TAG: ghcr.io/afwillia/data_curator:0.1.9-beta
   AWS_DEFAULT_REGION: 'us-east-1' 
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"
@@ -38,10 +38,6 @@ jobs:
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
           
-      - name: Log in to registry
-        # This is where you will update the personal access token to GITHUB_TOKEN
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
         # https://github.com/marketplace/actions/aws-cdk-github-actions
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2

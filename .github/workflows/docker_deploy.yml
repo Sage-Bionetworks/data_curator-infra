@@ -45,10 +45,6 @@ jobs:
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
 
-      - name: Log in to registry
-        # This is where you will update the personal access token to GITHUB_TOKEN
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
         # https://github.com/marketplace/actions/aws-cdk-github-actions
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2

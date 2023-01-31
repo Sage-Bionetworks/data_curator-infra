@@ -136,3 +136,6 @@ dmypy.json
 
 # jetbrains
 .idea
+
+# CDK synth outputs
+cdk/cdk.out/

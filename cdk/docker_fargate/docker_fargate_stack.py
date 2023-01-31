@@ -25,6 +25,7 @@ PORT_NUMBER = "PORT"
 HOST_NAME = "HOST_NAME"
 HOSTED_ZONE_NAME = "HOSTED_ZONE_NAME"
 HOSTED_ZONE_ID = "HOSTED_ZONE_ID"
+VPC_CIDR = "VPC_CIDR"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -78,6 +79,9 @@ def get_hosted_zone_name() -> str:
 def get_hosted_zone_id() -> str:
     return os.getenv(HOSTED_ZONE_ID)
 
+def get_vpc_cidr() -> str:
+    return os.getenv(VPC_CIDR)
+
 def get_host_name() -> str:
     return os.getenv(HOST_NAME)
 
@@ -87,7 +91,7 @@ class DockerFargateStack(Stack):
         stack_id = create_id()
         super().__init__(scope, stack_id, **kwargs)
 
-        vpc = ec2.Vpc(self, get_vpc_name(), max_azs=2)
+        vpc = ec2.Vpc(self, get_vpc_name(), cidr=get_vpc_cidr(), max_azs=2)
 
         cluster = ecs.Cluster(self, get_cluster_name(), vpc=vpc, container_insights=True)
 

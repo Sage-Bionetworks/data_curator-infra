@@ -14,7 +14,7 @@ concurrency:
   group: ${{ github.workflow }}
 
 env:
-  IMAGE_PATH_AND_TAG: ghcr.io/data_curator/0.2.8-beta
+  IMAGE_PATH_AND_TAG: ghcr.io/data_curator:0.2.8-beta
   AWS_DEFAULT_REGION: 'us-east-1'
   PORT: 3838
   COST_CENTER: "NO PROGRAM / 000000"

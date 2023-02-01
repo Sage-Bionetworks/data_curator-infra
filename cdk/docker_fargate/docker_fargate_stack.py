@@ -42,9 +42,6 @@ def create_id() -> str:
 CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
 ENV_NAME = "ENV"
 
-def get_vpc_name() -> str:
-    return get_required_env(STACK_NAME_PREFIX)+VPC_SUFFIX
-
 def get_cluster_name() -> str:
     return get_required_env(STACK_NAME_PREFIX)+CLUSTER_SUFFIX
 
@@ -83,11 +80,9 @@ def get_host_name() -> str:
 
 class DockerFargateStack(Stack):
 
-    def __init__(self, scope: Construct, **kwargs) -> None:
+    def __init__(self, scope: Construct, vpc: ec2.Vpc, **kwargs) -> None:
         stack_id = create_id()
         super().__init__(scope, stack_id, **kwargs)
-
-        vpc = ec2.Vpc(self, get_vpc_name(), max_azs=2)
 
         cluster = ecs.Cluster(self, get_cluster_name(), vpc=vpc, container_insights=True)
 

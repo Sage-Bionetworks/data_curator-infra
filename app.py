@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import aws_cdk as cdk
 
-from common.vpc_stack import VpcStack
-from docker_fargate.docker_fargate_stack import DockerFargateStack
+from src.common.vpc_stack import VpcStack
+from src.docker_fargate.docker_fargate_stack import DockerFargateStack
 
 app = cdk.App()
 vpc_stack = VpcStack(app)

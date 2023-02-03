@@ -10,6 +10,8 @@ from aws_cdk import (Stack,
     Tags)
 
 import os
+import config as config
+import helpers as helpers
 import aws_cdk.aws_secretsmanager as sm
 from constructs import Construct
 
@@ -19,8 +21,6 @@ VPC_SUFFIX = "-FargateVPC"
 CLUSTER_SUFFIX = "-Cluster"
 SERVICE_SUFFIX = "-Service"
 DOCKER_IMAGE_NAME = "DOCKER_IMAGE"
-COST_CENTER = "COST_CENTER"
-COST_CENTER_TAG_NAME = "CostCenter"
 PORT_NUMBER = "PORT"
 HOST_NAME = "HOST_NAME"
 HOSTED_ZONE_NAME = "HOSTED_ZONE_NAME"
@@ -29,36 +29,27 @@ HOSTED_ZONE_ID = "HOSTED_ZONE_ID"
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
 
-def get_required_env(name: str) -> str:
-    value = os.getenv(name)
-    if value is None or len(value)==0:
-        raise Exception(f'{name} is required.')
-    return value
-
 def create_id() -> str:
-    return get_required_env(STACK_NAME_PREFIX)+ID_SUFFIX
+    return helpers.get_required_env(STACK_NAME_PREFIX)+ID_SUFFIX
 
 
 CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
 ENV_NAME = "ENV"
 
 def get_cluster_name() -> str:
-    return get_required_env(STACK_NAME_PREFIX)+CLUSTER_SUFFIX
+    return helpers.get_required_env(STACK_NAME_PREFIX)+CLUSTER_SUFFIX
 
 def get_service_name() -> str:
-    return get_required_env(STACK_NAME_PREFIX)+SERVICE_SUFFIX
+    return helpers.get_required_env(STACK_NAME_PREFIX)+SERVICE_SUFFIX
 
 def get_secret_name() -> str:
-    return get_required_env(STACK_NAME_PREFIX)
+    return helpers.get_required_env(STACK_NAME_PREFIX)
 
 def get_docker_image_name():
-    return get_required_env(DOCKER_IMAGE_NAME)
-
-def get_cost_center() -> str:
-    return get_required_env(COST_CENTER)
+    return helpers.get_required_env(DOCKER_IMAGE_NAME)
 
 def get_port() -> int:
-    return int(get_required_env(PORT_NUMBER))
+    return int(helpers.get_required_env(PORT_NUMBER))
 
 def get_container_env() -> str:
     return os.getenv(CONTAINER_ENV)
@@ -146,4 +137,4 @@ class DockerFargateStack(Stack):
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
         # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(COST_CENTER_TAG_NAME, get_cost_center())
+        Tags.of(scope).add(config.COST_CENTER_TAG_NAME, helpers.get_cost_center())

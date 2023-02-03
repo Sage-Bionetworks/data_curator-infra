@@ -50,7 +50,6 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'synth'
-          working_dir: 'cdk'
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
 
@@ -59,7 +58,6 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_args: '--require-approval never'
-          working_dir: 'cdk'
           actions_comment: false
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}

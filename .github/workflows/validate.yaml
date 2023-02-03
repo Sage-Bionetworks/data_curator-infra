@@ -16,3 +16,10 @@ jobs:
         with:
           python-version: 3.9
       - uses: pre-commit/action@v2.0.0
+      - name: cdk synth
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'synth'
+          working_dir: 'cdk'
+        env:
+          DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}

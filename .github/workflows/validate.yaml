@@ -10,9 +10,14 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - uses: pre-commit/action@v2.0.0
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Static Analysis
+        uses: pre-commit/action@v3.0.0
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run unit tests
+        run: COST_CENTER=CC python -m pytest tests/ -s -v

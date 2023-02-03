@@ -22,6 +22,7 @@ env:
   HOST_NAME: dca.dnt-dev.sagebase.org
   HOSTED_ZONE_NAME: dnt-dev.sagebase.org
   HOSTED_ZONE_ID: Z0441843EAHKE7DR12AX
+  VPC_CIDR: 10.255.70.0/24
 
 
 jobs:

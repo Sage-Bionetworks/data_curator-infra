@@ -1,7 +1,7 @@
 import aws_cdk as core
 import aws_cdk.assertions as assertions
 
-from src.common.vpc_stack import VpcStack
+from common.vpc_stack import VpcStack
 
 def test_vpc_created():
     app = core.App()

@@ -35,7 +35,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Static Analysis
+        uses: pre-commit/action@v3.0.0
+
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
 
         # Authenticate to AWS using GitHub OIDC
       - name: Assume AWS Role

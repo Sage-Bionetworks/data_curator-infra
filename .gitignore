@@ -137,5 +137,5 @@ dmypy.json
 # jetbrains
 .idea
 
-# CDK generated files
+# CDK outputs
 cdk.out/

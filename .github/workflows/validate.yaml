@@ -36,6 +36,5 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'synth'
-          working_dir: 'cdk'
         env:
           DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}

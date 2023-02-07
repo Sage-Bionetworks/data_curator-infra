@@ -10,7 +10,7 @@ env:
   IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.8-beta
   AWS_DEFAULT_REGION: 'us-east-1'
   PORT: 3838
-  COST_CENTER: "NO PROGRAM / 000000"
+  COST_CENTER: 'NO_PROGRAM/000000'
   STACK_NAME_PREFIX: dca-test
   HOST_NAME: dca.dnt-dev.sagebase.org
   HOSTED_ZONE_NAME: dnt-dev.sagebase.org
@@ -30,7 +30,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run unit tests
-        run: COST_CENTER=${{ env.COST_CENTER }} python -m pytest tests/ -s -v
+        run: ${{ env.COST_CENTER }} python -m pytest tests/ -s -v
 
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2

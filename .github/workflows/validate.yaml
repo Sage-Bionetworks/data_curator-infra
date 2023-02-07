@@ -30,7 +30,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run unit tests
-        run: ${{ env.COST_CENTER }} python -m pytest tests/ -s -v
+        run: COST_CENTER=${{ env.COST_CENTER }} python -m pytest tests/ -s -v
 
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2

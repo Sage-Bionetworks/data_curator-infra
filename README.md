@@ -39,6 +39,7 @@ $ pip install -r requirements.txt
 ```
 
 At this point you can now synthesize the CloudFormation template for this code.
+An environment context is rquired, check [cdk.json](cdk.json) for available contexts.
 
 ```
 $ cdk synth --context env=dev

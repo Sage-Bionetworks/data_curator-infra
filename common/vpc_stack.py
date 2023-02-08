@@ -1,5 +1,4 @@
-import config as config
-import helpers as helpers
+import config
 
 from aws_cdk import (Stack,
     aws_ec2 as ec2,
@@ -12,10 +11,9 @@ VPC_NAME = f'{STACK_ID}-vpc'
 
 class VpcStack(Stack):
 
-    def __init__(self, scope: Construct, **kwargs) -> None:
+    def __init__(self, scope: Construct, env: dict, **kwargs) -> None:
         super().__init__(scope, STACK_ID, **kwargs)
-
         self.vpc = ec2.Vpc(self, VPC_NAME, max_azs=2)
 
         # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_TAG_NAME, helpers.get_cost_center())
+        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))

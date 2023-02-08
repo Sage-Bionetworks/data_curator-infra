@@ -16,7 +16,7 @@ class VpcStack(Stack):
         super().__init__(scope, STACK_ID, **kwargs)
         self.vpc = ec2.Vpc(self,
                            VPC_NAME,
-                           cidr=env.get(config.VPC_CIDR_CONTEXT),
+                           cidr=env.get(VPC_CIDR_CONTEXT),
                            max_azs=2)
 
         # Tag all resources in this Stack's scope with a cost center tag

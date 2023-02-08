@@ -3,7 +3,6 @@ from aws_cdk import (Stack,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecs_patterns as ecs_patterns,
-    aws_ssm as ssm,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
     Duration,
@@ -23,7 +22,6 @@ PORT_NUMBER_CONTEXT = "PORT"
 HOST_NAME_CONTEXT = "HOST_NAME"
 HOSTED_ZONE_NAME_CONTEXT = "HOSTED_ZONE_NAME"
 HOSTED_ZONE_ID_CONTEXT = "HOSTED_ZONE_ID"
-VPC_CIDR_CONTEXT = "VPC_CIDR"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -47,9 +45,6 @@ def get_hosted_zone_name(env: dict) -> str:
 
 def get_hosted_zone_id(env: dict) -> str:
     return env.get(HOSTED_ZONE_ID_CONTEXT)
-
-def get_vpc_cidr(env: dict) -> str:
-    return env.get(VPC_CIDR_CONTEXT)
 
 def get_host_name(env: dict) -> str:
     return env.get(HOST_NAME_CONTEXT)

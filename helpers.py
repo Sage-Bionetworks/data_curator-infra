@@ -1,11 +1,13 @@
-import os
+import aws_cdk
 import config
 
-def get_required_env(name: str) -> str:
-  value = os.getenv(name)
-  if value is None or len(value) == 0:
-    raise Exception(f'{name} is required.')
-  return value
+def get_app_config(app: aws_cdk.App) -> dict:
+  context = app.node.try_get_context('env')
+  if context is None or context not in config.CONTEXT_ENVS:
+    raise ValueError(
+      "ERROR: CDK env context not provide or is invalid. "
+      "Try passing in one of the available contexts: "
+      + ', '.join(config.CONTEXT_ENVS))
 
-def get_cost_center() -> str:
-  return get_required_env(config.COST_CENTER)
+  app_config = app.node.try_get_context(context)
+  return app_config

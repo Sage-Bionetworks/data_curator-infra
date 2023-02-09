@@ -3,57 +3,33 @@ from aws_cdk import (Stack,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecs_patterns as ecs_patterns,
-    aws_ssm as ssm,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
     Duration,
     Tags)
 
-import os
 import config as config
-import helpers as helpers
 import aws_cdk.aws_secretsmanager as sm
 from constructs import Construct
 
-STACK_NAME_PREFIX = "STACK_NAME_PREFIX"
 ID_SUFFIX = "-DockerFargateStack"
-VPC_SUFFIX = "-FargateVPC"
 CLUSTER_SUFFIX = "-Cluster"
 SERVICE_SUFFIX = "-Service"
-DOCKER_IMAGE_NAME = "DOCKER_IMAGE"
-PORT_NUMBER = "PORT"
-HOST_NAME = "HOST_NAME"
-HOSTED_ZONE_NAME = "HOSTED_ZONE_NAME"
-HOSTED_ZONE_ID = "HOSTED_ZONE_ID"
-VPC_CIDR = "VPC_CIDR"
+
+IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
+STACK_NAME_PREFIX_CONTEXT = "STACK_NAME_PREFIX"
+PORT_NUMBER_CONTEXT = "PORT"
+HOST_NAME_CONTEXT = "HOST_NAME"
+HOSTED_ZONE_NAME_CONTEXT = "HOSTED_ZONE_NAME"
+HOSTED_ZONE_ID_CONTEXT = "HOSTED_ZONE_ID"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
-
-def create_id() -> str:
-    return helpers.get_required_env(STACK_NAME_PREFIX)+ID_SUFFIX
-
-
 CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
 ENV_NAME = "ENV"
 
-def get_cluster_name() -> str:
-    return helpers.get_required_env(STACK_NAME_PREFIX)+CLUSTER_SUFFIX
-
-def get_service_name() -> str:
-    return helpers.get_required_env(STACK_NAME_PREFIX)+SERVICE_SUFFIX
-
-def get_secret_name() -> str:
-    return helpers.get_required_env(STACK_NAME_PREFIX)
-
-def get_docker_image_name():
-    return helpers.get_required_env(DOCKER_IMAGE_NAME)
-
-def get_port() -> int:
-    return int(helpers.get_required_env(PORT_NUMBER))
-
-def get_container_env() -> str:
-    return os.getenv(CONTAINER_ENV)
+def create_id(env: dict) -> str:
+    return env.get(STACK_NAME_PREFIX_CONTEXT) + ID_SUFFIX
 
 def create_secret(scope: Construct, name: str) -> str:
     isecret = sm.Secret.from_secret_name_v2(scope, name, name)
@@ -61,42 +37,62 @@ def create_secret(scope: Construct, name: str) -> str:
     # see also: https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_ecs/Secret.html
     # see also: ecs.Secret.from_ssm_parameter(ssm.IParameter(parameter_name=name))
 
-def get_hosted_zone_name() -> str:
-    return os.getenv(HOSTED_ZONE_NAME)
+def get_container_env(env: dict) -> str:
+    return env.get(CONTAINER_ENV)
 
-def get_hosted_zone_id() -> str:
-    return os.getenv(HOSTED_ZONE_ID)
+def get_hosted_zone_name(env: dict) -> str:
+    return env.get(HOSTED_ZONE_NAME_CONTEXT)
 
-def get_vpc_cidr() -> str:
-    return os.getenv(VPC_CIDR)
+def get_hosted_zone_id(env: dict) -> str:
+    return env.get(HOSTED_ZONE_ID_CONTEXT)
 
-def get_host_name() -> str:
-    return os.getenv(HOST_NAME)
+def get_host_name(env: dict) -> str:
+    return env.get(HOST_NAME_CONTEXT)
+
+def get_cluster_name(env: dict) -> str:
+    return env.get(STACK_NAME_PREFIX_CONTEXT) + CLUSTER_SUFFIX
+
+def get_service_name(env: dict) -> str:
+    return env.get(STACK_NAME_PREFIX_CONTEXT) + SERVICE_SUFFIX
+
+def get_secret_name(env: dict) -> str:
+    return env.get(STACK_NAME_PREFIX_CONTEXT)
+
+def get_docker_image_name(env: dict):
+    return env.get(IMAGE_PATH_AND_TAG_CONTEXT)
+
+def get_port(env: dict) -> int:
+    return int(env.get(PORT_NUMBER_CONTEXT))
+
 
 class DockerFargateStack(Stack):
 
-    def __init__(self, scope: Construct, vpc: ec2.Vpc, **kwargs) -> None:
-        stack_id = create_id()
+    def __init__(self, scope: Construct, env: dict, vpc: ec2.Vpc, **kwargs) -> None:
+        stack_id = create_id(env)
         super().__init__(scope, stack_id, **kwargs)
 
-        cluster = ecs.Cluster(self, get_cluster_name(), vpc=vpc, container_insights=True)
+        cluster = ecs.Cluster(self, get_cluster_name(env), vpc=vpc, container_insights=True)
 
         secrets = {
-            SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name())
+            SECRETS_MANAGER_ENV_NAME: create_secret(self, get_secret_name(env))
         }
 
         env_vars = {}
-        container_env = get_container_env()
+        container_env = get_container_env(env)
         if container_env is not None:
             env_vars[ENV_NAME]=container_env
 
         task_image_options = ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                   image=ecs.ContainerImage.from_registry(get_docker_image_name()),
+                   image=ecs.ContainerImage.from_registry(get_docker_image_name(env)),
                    environment=env_vars,
                    secrets = secrets,
-                   container_port = get_port())
+                   container_port = get_port(env))
 
-        zone = r53.PublicHostedZone.from_public_hosted_zone_attributes(self, id=stack_id+"_zone", hosted_zone_id=get_hosted_zone_id(), zone_name=get_hosted_zone_name())
+        zone = r53.PublicHostedZone.from_public_hosted_zone_attributes(
+            self,
+            id=stack_id+"_zone",
+            hosted_zone_id=get_hosted_zone_id(env),
+            zone_name=get_hosted_zone_name(env))
 
 
         #
@@ -104,7 +100,7 @@ class DockerFargateStack(Stack):
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_ecs_patterns/ApplicationLoadBalancedTaskImageOptions.html#aws_cdk.aws_ecs_patterns.ApplicationLoadBalancedTaskImageOptions
         #
         load_balanced_fargate_service = ecs_patterns.\
-                ApplicationLoadBalancedFargateService(self, get_service_name(),
+                ApplicationLoadBalancedFargateService(self, get_service_name(env),
             cluster=cluster,            # Required
             cpu=256,                    # Default is 256
             desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
@@ -115,7 +111,7 @@ class DockerFargateStack(Stack):
             # TLS:
             protocol=elbv2.ApplicationProtocol.HTTPS,
             ssl_policy=elbv2.SslPolicy.FORWARD_SECRECY_TLS12_RES, # Strong forward secrecy ciphers and TLS1.2 only.
-            domain_name=get_host_name(), # The domain name for the service, e.g. “api.example.com.”
+            domain_name=get_host_name(env), # The domain name for the service, e.g. “api.example.com.”
             domain_zone=zone) #  The Route53 hosted zone for the domain, e.g. “example.com.”
 
         # Overriding health check timeout helps with sluggishly responding app's (e.g. Shiny)
@@ -142,4 +138,4 @@ class DockerFargateStack(Stack):
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
         # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_TAG_NAME, helpers.get_cost_center())
+        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))

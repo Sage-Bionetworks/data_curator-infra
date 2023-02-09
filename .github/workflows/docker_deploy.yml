@@ -13,18 +13,6 @@ on:
 concurrency:
   group: ${{ github.workflow }}
 
-env:
-  IMAGE_PATH_AND_TAG: ghcr.io/sage-bionetworks/data_curator:0.2.8-beta
-  AWS_DEFAULT_REGION: 'us-east-1'
-  PORT: 3838
-  COST_CENTER: "NO PROGRAM / 000000"
-  STACK_NAME_PREFIX: dca-test
-  HOST_NAME: dca.dnt-dev.sagebase.org
-  HOSTED_ZONE_NAME: dnt-dev.sagebase.org
-  HOSTED_ZONE_ID: Z0441843EAHKE7DR12AX
-  VPC_CIDR: 10.255.70.0/24
-
-
 jobs:
   cdk-deploy:
     runs-on: ubuntu-latest
@@ -44,13 +32,13 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run unit tests
-        run: COST_CENTER=CC python -m pytest tests/ -s -v
+        run: python -m pytest tests/ -s -v
 
         # Authenticate to AWS using GitHub OIDC
       - name: Assume AWS Role
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: us-east-1
           role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-1KD3QGJEFWP7M
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
@@ -60,14 +48,11 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'synth'
-        env:
-          DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}
+          cdk_args: '--context env=dev'
 
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
-          cdk_args: '--require-approval never'
+          cdk_args: '--require-approval never --context env=dev'
           actions_comment: false
-        env:
-          DOCKER_IMAGE: ${{ env.IMAGE_PATH_AND_TAG }}

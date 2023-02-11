@@ -48,11 +48,11 @@ jobs:
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'synth'
-          cdk_args: '--context env=dev'
+          cdk_args: '--context env=dev --debug'
 
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
-          cdk_args: '--require-approval never --context env=dev'
+          cdk_args: '--require-approval never --context env=dev --progress events --debug'
           actions_comment: false

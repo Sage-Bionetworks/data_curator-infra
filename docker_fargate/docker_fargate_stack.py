@@ -64,14 +64,14 @@ def get_port(env: dict) -> int:
 
 class DockerFargateStack(Stack):
 
-    def __init__(self, scope: Construct, env: dict, vpc: ec2.Vpc, **kwargs) -> None:
+    def __init__(self, scope: Construct, context: str, env: dict, vpc: ec2.Vpc, **kwargs) -> None:
         stack_id = create_id(env)
         super().__init__(scope, stack_id, **kwargs)
 
         cluster = ecs.Cluster(self, get_cluster_name(env), vpc=vpc, container_insights=True)
 
         secrets = {
-            SECRETS_MANAGER_ENV_NAME: create_secret(self, f'{stack_id}/{env}/ecs', "task_vars")
+            SECRETS_MANAGER_ENV_NAME: create_secret(self, f'{stack_id}/{context}/ecs', "task_vars")
         }
 
         env_vars = {}

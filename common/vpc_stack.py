@@ -12,7 +12,7 @@ VPC_CIDR_CONTEXT= "VPC_CIDR"
 
 class VpcStack(Stack):
 
-    def __init__(self, scope: Construct, env: dict, **kwargs) -> None:
+    def __init__(self, scope: Construct, context: str, env: dict, **kwargs) -> None:
         super().__init__(scope, STACK_ID, **kwargs)
         self.vpc = ec2.Vpc(self,
                            VPC_NAME,

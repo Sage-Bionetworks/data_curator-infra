@@ -10,4 +10,4 @@ def get_app_config(app: aws_cdk.App) -> dict:
       + ', '.join(config.CONTEXT_ENVS))
 
   app_config = app.node.try_get_context(context)
-  return app_config
+  return context, app_config

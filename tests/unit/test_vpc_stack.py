@@ -8,7 +8,7 @@ def test_vpc_created():
     app = core.App()
     app_config = {config.COST_CENTER_CONTEXT: "test"}
 
-    stack = VpcStack(app, app_config)
+    stack = VpcStack(app, "dev", app_config)
     template = assertions.Template.from_stack(stack)
 
     template.has_resource_properties("AWS::EC2::VPC", {

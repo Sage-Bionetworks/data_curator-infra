@@ -31,7 +31,7 @@ ENV_NAME = "ENV"
 def create_id(env: dict) -> str:
     return env.get(STACK_NAME_PREFIX_CONTEXT) + ID_SUFFIX
 
-def create_secret(scope: Construct, id: str, name: str) -> str:
+def get_secret(scope: Construct, id: str, name: str) -> str:
     isecret = sm.Secret.from_secret_name_v2(scope, id, name)
     return ecs.Secret.from_secrets_manager(isecret)
     # see also: https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_ecs/Secret.html
@@ -70,8 +70,9 @@ class DockerFargateStack(Stack):
 
         cluster = ecs.Cluster(self, get_cluster_name(env), vpc=vpc, container_insights=True)
 
+        secret_name = f'{stack_id}/{context}/ecs'
         secrets = {
-            SECRETS_MANAGER_ENV_NAME: create_secret(self, f'{stack_id}/{context}/ecs', "task_vars")
+            SECRETS_MANAGER_ENV_NAME: get_secret(self, secret_name, secret_name)
         }
 
         env_vars = {}

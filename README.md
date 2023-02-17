@@ -1,6 +1,7 @@
-# aws-application-deployment-template
+# data-curator_infra
 
-CDK-based template for deploying a containerized application to AWS
+CDK project for deploying the infrastructure for a containerized
+application to AWS
 
 ## Perequisites
 

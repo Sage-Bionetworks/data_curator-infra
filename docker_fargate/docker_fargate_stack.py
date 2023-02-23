@@ -12,10 +12,6 @@ import config as config
 import aws_cdk.aws_secretsmanager as sm
 from constructs import Construct
 
-ID_SUFFIX = "DockerFargateStack"
-CLUSTER_SUFFIX = "Cluster"
-SERVICE_SUFFIX = "Service"
-
 IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
 PORT_NUMBER_CONTEXT = "PORT"
 HOST_NAME_CONTEXT = "HOST_NAME"
@@ -45,12 +41,6 @@ def get_hosted_zone_id(env: dict) -> str:
 def get_host_name(env: dict) -> str:
     return env.get(HOST_NAME_CONTEXT)
 
-def get_cluster_name(env: dict) -> str:
-    return f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{CLUSTER_SUFFIX}'
-
-def get_service_name(env: dict) -> str:
-    return f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{SERVICE_SUFFIX}'
-
 def get_docker_image_name(env: dict):
     return env.get(IMAGE_PATH_AND_TAG_CONTEXT)
 
@@ -61,10 +51,15 @@ def get_port(env: dict) -> int:
 class DockerFargateStack(Stack):
 
     def __init__(self, scope: Construct, context: str, env: dict, vpc: ec2.Vpc, **kwargs) -> None:
-        stack_id = f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{context}-{ID_SUFFIX}'
+        stack_prefix = f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{context}'
+        stack_id = f'{stack_prefix}-DockerFargateStack'
         super().__init__(scope, stack_id, **kwargs)
 
-        cluster = ecs.Cluster(self, get_cluster_name(env), vpc=vpc, container_insights=True)
+        cluster = ecs.Cluster(
+            self,
+            f'{stack_prefix}-cluster',
+            vpc=vpc,
+            container_insights=True)
 
         secret_name = f'{stack_id}/{context}/ecs'
         secrets = {
@@ -93,8 +88,9 @@ class DockerFargateStack(Stack):
         # for options to pass to ApplicationLoadBalancedTaskImageOptions see:
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_ecs_patterns/ApplicationLoadBalancedTaskImageOptions.html#aws_cdk.aws_ecs_patterns.ApplicationLoadBalancedTaskImageOptions
         #
-        load_balanced_fargate_service = ecs_patterns.\
-                ApplicationLoadBalancedFargateService(self, get_service_name(env),
+        load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(
+            self,
+            f'{stack_prefix}-service',
             cluster=cluster,            # Required
             cpu=256,                    # Default is 256
             desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB

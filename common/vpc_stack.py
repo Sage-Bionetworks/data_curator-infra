@@ -6,15 +6,16 @@ from aws_cdk import (Stack,
 
 from constructs import Construct
 
+STACK_ID = "dca-common"
+VPC_NAME = f'{STACK_ID}-vpc'
 VPC_CIDR_CONTEXT= "VPC_CIDR"
 
 class VpcStack(Stack):
 
     def __init__(self, scope: Construct, context: str, env: dict, **kwargs) -> None:
-        stack_id = f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-common'
-        super().__init__(scope, stack_id, **kwargs)
+        super().__init__(scope, STACK_ID, **kwargs)
         self.vpc = ec2.Vpc(self,
-                           f'{stack_id}-vpc',
+                           VPC_NAME,
                            cidr=env.get(VPC_CIDR_CONTEXT),
                            max_azs=2)
 

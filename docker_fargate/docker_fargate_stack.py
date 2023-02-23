@@ -12,12 +12,11 @@ import config as config
 import aws_cdk.aws_secretsmanager as sm
 from constructs import Construct
 
-ID_SUFFIX = "-DockerFargateStack"
-CLUSTER_SUFFIX = "-Cluster"
-SERVICE_SUFFIX = "-Service"
+ID_SUFFIX = "DockerFargateStack"
+CLUSTER_SUFFIX = "Cluster"
+SERVICE_SUFFIX = "Service"
 
 IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
-STACK_NAME_PREFIX_CONTEXT = "STACK_NAME_PREFIX"
 PORT_NUMBER_CONTEXT = "PORT"
 HOST_NAME_CONTEXT = "HOST_NAME"
 HOSTED_ZONE_NAME_CONTEXT = "HOSTED_ZONE_NAME"
@@ -27,9 +26,6 @@ HOSTED_ZONE_ID_CONTEXT = "HOSTED_ZONE_ID"
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
 CONTAINER_ENV = "CONTAINER_ENV" # name of env passed from GitHub action
 ENV_NAME = "ENV"
-
-def create_id(env: dict) -> str:
-    return env.get(STACK_NAME_PREFIX_CONTEXT) + ID_SUFFIX
 
 def get_secret(scope: Construct, id: str, name: str) -> str:
     isecret = sm.Secret.from_secret_name_v2(scope, id, name)
@@ -50,10 +46,10 @@ def get_host_name(env: dict) -> str:
     return env.get(HOST_NAME_CONTEXT)
 
 def get_cluster_name(env: dict) -> str:
-    return env.get(STACK_NAME_PREFIX_CONTEXT) + CLUSTER_SUFFIX
+    return f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{CLUSTER_SUFFIX}'
 
 def get_service_name(env: dict) -> str:
-    return env.get(STACK_NAME_PREFIX_CONTEXT) + SERVICE_SUFFIX
+    return f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{SERVICE_SUFFIX}'
 
 def get_docker_image_name(env: dict):
     return env.get(IMAGE_PATH_AND_TAG_CONTEXT)
@@ -65,7 +61,7 @@ def get_port(env: dict) -> int:
 class DockerFargateStack(Stack):
 
     def __init__(self, scope: Construct, context: str, env: dict, vpc: ec2.Vpc, **kwargs) -> None:
-        stack_id = create_id(env)
+        stack_id = f'{env.get(config.STACK_NAME_PREFIX_CONTEXT)}-{context}-{ID_SUFFIX}'
         super().__init__(scope, stack_id, **kwargs)
 
         cluster = ecs.Cluster(self, get_cluster_name(env), vpc=vpc, container_insights=True)
@@ -88,7 +84,7 @@ class DockerFargateStack(Stack):
 
         zone = r53.PublicHostedZone.from_public_hosted_zone_attributes(
             self,
-            id=stack_id+"_zone",
+            id=f'{stack_id}_zone',
             hosted_zone_id=get_hosted_zone_id(env),
             zone_name=get_hosted_zone_name(env))
 

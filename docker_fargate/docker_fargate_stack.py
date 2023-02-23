@@ -57,7 +57,7 @@ class DockerFargateStack(Stack):
 
         cluster = ecs.Cluster(
             self,
-            f'{stack_prefix}-cluster',
+            f'{stack_prefix}-Cluster',
             vpc=vpc,
             container_insights=True)
 
@@ -90,7 +90,7 @@ class DockerFargateStack(Stack):
         #
         load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(
             self,
-            f'{stack_prefix}-service',
+            f'{stack_prefix}-Service',
             cluster=cluster,            # Required
             cpu=256,                    # Default is 256
             desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB

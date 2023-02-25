@@ -82,3 +82,26 @@ to store secrets for this project.  An AWS best practice is to create secrets
 with a unique ID to prevent conflicts when multiple instances of this project
 is deployed to the same AWS account.  Our naming convention is
 `<cfn stack id>/<environment id>/<secret name>`.  An example is `MyTestStack/dev/MySecret`
+
+
+## DNS and Certificates
+
+Sage IT manages the creation of DNS records and TLS certificates in [org-formation](https://github.com/Sage-Bionetworks-IT/organizations-infra/tree/master/org-formation).
+The DNS records are managed centrally in the SageIT account, and corresponding
+wildcard TLS certificates are created in any application accounts that will
+deploy applications with custom (non-AWS) domains.
+
+When deploying a new application (or an existing application to a new account,
+e.g. the first deploy to "prod"), first check that a certificate for the
+desired domain has been created in the account the application will be deployed
+to (e.g. [here for app.sagebionetworks.org](https://github.com/Sage-Bionetworks-IT/organizations-infra/blob/master/org-formation/100-shared-dns/_tasks.yaml#L24-L27)).
+If a certificate is needed in a new account, make a request to the IT team
+because there is a manual validation step that must be performed by an
+administrator. Set the value of `ACM_CERT_ARN` context variable to the ARN of
+the certificate in the target account. If the AWS ARN for an existing
+certificate is not known, it can be requested from Sage IT.
+
+Finally, a DNS CNAME must be created in org-formation after the initial
+deployment of the application to make the application available at the desired
+URL. The CDK application exports the DNS name of the Application Load Balancer
+to be consumed in org-formation. [An example PR setting up a CNAME](https://github.com/Sage-Bionetworks-IT/organizations-infra/pull/739).

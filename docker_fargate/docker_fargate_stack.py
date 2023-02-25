@@ -1,22 +1,21 @@
-
 from aws_cdk import (Stack,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecs_patterns as ecs_patterns,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
+    CfnOutput,
     Duration,
     Tags)
 
 import config as config
+import aws_cdk.aws_certificatemanager as cm
 import aws_cdk.aws_secretsmanager as sm
 from constructs import Construct
 
+ACM_CERT_ARN_CONTEXT = "ACM_CERT_ARN"
 IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
 PORT_NUMBER_CONTEXT = "PORT"
-HOST_NAME_CONTEXT = "HOST_NAME"
-HOSTED_ZONE_NAME_CONTEXT = "HOSTED_ZONE_NAME"
-HOSTED_ZONE_ID_CONTEXT = "HOSTED_ZONE_ID"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -32,14 +31,8 @@ def get_secret(scope: Construct, id: str, name: str) -> str:
 def get_container_env(env: dict) -> str:
     return env.get(CONTAINER_ENV)
 
-def get_hosted_zone_name(env: dict) -> str:
-    return env.get(HOSTED_ZONE_NAME_CONTEXT)
-
-def get_hosted_zone_id(env: dict) -> str:
-    return env.get(HOSTED_ZONE_ID_CONTEXT)
-
-def get_host_name(env: dict) -> str:
-    return env.get(HOST_NAME_CONTEXT)
+def get_certificate_arn(env: dict) -> str:
+    return env.get(ACM_CERT_ARN_CONTEXT)
 
 def get_docker_image_name(env: dict):
     return env.get(IMAGE_PATH_AND_TAG_CONTEXT)
@@ -77,12 +70,11 @@ class DockerFargateStack(Stack):
                    secrets = secrets,
                    container_port = get_port(env))
 
-        zone = r53.PublicHostedZone.from_public_hosted_zone_attributes(
+        cert = cm.Certificate.from_certificate_arn(
             self,
-            id=f'{stack_id}_zone',
-            hosted_zone_id=get_hosted_zone_id(env),
-            zone_name=get_hosted_zone_name(env))
-
+            f'{stack_id}-Certificate',
+            get_certificate_arn(env),
+        )
 
         #
         # for options to pass to ApplicationLoadBalancedTaskImageOptions see:
@@ -99,10 +91,10 @@ class DockerFargateStack(Stack):
             memory_limit_mib=1024,      # Default is 512
             public_load_balancer=True,  # Default is False
             # TLS:
+            certificate=cert,
             protocol=elbv2.ApplicationProtocol.HTTPS,
             ssl_policy=elbv2.SslPolicy.FORWARD_SECRECY_TLS12_RES, # Strong forward secrecy ciphers and TLS1.2 only.
-            domain_name=get_host_name(env), # The domain name for the service, e.g. “api.example.com.”
-            domain_zone=zone) #  The Route53 hosted zone for the domain, e.g. “example.com.”
+        )
 
         # Overriding health check timeout helps with sluggishly responding app's (e.g. Shiny)
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
@@ -129,3 +121,8 @@ class DockerFargateStack(Stack):
 
         # Tag all resources in this Stack's scope with a cost center tag
         Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))
+
+        # Export load balancer name
+        lb_dns_name = load_balanced_fargate_service.load_balancer.load_balancer_dns_name
+        lb_dns_export_name = f'{stack_id}-LoadBalancerDNS'
+        CfnOutput(self, 'LoadBalancerDNS', value=lb_dns_name, export_name=lb_dns_export_name)

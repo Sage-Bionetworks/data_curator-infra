@@ -6,7 +6,7 @@ name: Deploy to AWS
 on:
   workflow_run:
     workflows: [ "validate" ]
-    branches: [main]
+    branches: ['dev', 'prod']
     types:
       - completed
 
@@ -14,8 +14,9 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  cdk-deploy:
+  cdk-deploy-dev:
     runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/dev' }}
     permissions:
       id-token: write
       contents: read
@@ -25,14 +26,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Static Analysis
-        uses: pre-commit/action@v3.0.0
-
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
-
-      - name: Run unit tests
-        run: python -m pytest tests/ -s -v
 
         # Authenticate to AWS using GitHub OIDC
       - name: Assume AWS Role
@@ -43,16 +38,40 @@ jobs:
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
 
-        # https://github.com/marketplace/actions/aws-cdk-github-actions
-      - name: cdk synth
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'synth'
-          cdk_args: '--context env=dev --debug'
-
-      - name: cdk deploy
+      - name: cdk deploy to org-sagebase-dnt-dev (631692904429)
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
           cdk_args: '--require-approval never --context env=dev --progress events --debug'
+          actions_comment: false
+
+  cdk-deploy-prod:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/prod' }}
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+        # Authenticate to AWS using GitHub OIDC
+      - name: Assume AWS Role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::878654265857:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-KZJPUIC0RY0P
+          role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
+          role-duration-seconds: 1200
+
+      - name: cdk deploy to org-sagebase-dca-prod (878654265857)
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never --context env=prod --progress events --debug'
           actions_comment: false

@@ -4,11 +4,7 @@
 name: aws-deploy
 
 on:
-  workflow_run:
-    workflows:
-      - validate
-    types:
-      - completed
+  push:
     branches:
       - dev
       - prod

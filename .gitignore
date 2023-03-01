@@ -139,3 +139,6 @@ dmypy.json
 
 # CDK outputs
 cdk.out/
+
+# VS Code
+.vscode/

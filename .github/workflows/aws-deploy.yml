@@ -1,17 +1,19 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/master/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 
-name: Deploy to AWS
+name: aws-deploy
 
 on:
   workflow_run:
-    workflows: [ "validate" ]
-    branches: ['dev', 'prod']
+    workflows:
+      - validate
     types:
       - completed
+    branches:
+      - dev
+      - prod
 
-concurrency:
-  group: ${{ github.workflow }}
+concurrency: ci-${{ github.ref }}
 
 jobs:
   cdk-deploy-dev:

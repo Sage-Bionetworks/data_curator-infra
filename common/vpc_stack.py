@@ -19,4 +19,4 @@ class VpcStack(Stack):
                            max_azs=2)
 
         # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))
+        Tags.of(scope).add(config.COST_CENTER_TAG, env.get(config.COST_CENTER_CONTEXT))

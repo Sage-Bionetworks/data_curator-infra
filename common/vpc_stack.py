@@ -18,5 +18,6 @@ class VpcStack(Stack):
                            cidr=env.get(VPC_CIDR_CONTEXT),
                            max_azs=2)
 
-        # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_TAG, env.get(config.COST_CENTER_CONTEXT))
+        # Tag all resources in this Stack's scope with context tags
+        for key, value in env.get(config.TAGS_CONTEXT).items():
+            Tags.of(scope).add(key, value)

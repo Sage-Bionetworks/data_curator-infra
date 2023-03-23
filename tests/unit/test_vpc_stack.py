@@ -6,7 +6,7 @@ from common.vpc_stack import VpcStack
 
 def test_vpc_created():
     app = core.App()
-    app_config = {config.COST_CENTER_CONTEXT: "test"}
+    app_config = {config.TAGS_CONTEXT: {"TagName": "TagValue"}}
 
     stack = VpcStack(app, "dev", app_config)
     template = assertions.Template.from_stack(stack)

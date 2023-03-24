@@ -119,8 +119,9 @@ class DockerFargateStack(Stack):
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
-        # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))
+        # Tag all resources in this Stack's scope with context tags
+        for key, value in env.get(config.TAGS_CONTEXT).items():
+            Tags.of(scope).add(key, value)
 
         # Export load balancer name
         lb_dns_name = load_balanced_fargate_service.load_balancer.load_balancer_dns_name

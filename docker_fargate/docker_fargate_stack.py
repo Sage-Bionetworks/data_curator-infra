@@ -85,7 +85,7 @@ class DockerFargateStack(Stack):
             f'{stack_prefix}-Service',
             cluster=cluster,            # Required
             cpu=512,                    # Default is 256
-            desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
+            desired_count=3,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
             circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True), # Enable rollback on deployment failure
             task_image_options=task_image_options,
             memory_limit_mib=4096,      # Default is 512

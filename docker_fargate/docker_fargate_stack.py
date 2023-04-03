@@ -84,11 +84,11 @@ class DockerFargateStack(Stack):
             self,
             f'{stack_prefix}-Service',
             cluster=cluster,            # Required
-            cpu=512,                    # Default is 256
-            desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
+            cpu=256,                    # Default is 256
+            desired_count=3,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
             circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True), # Enable rollback on deployment failure
             task_image_options=task_image_options,
-            memory_limit_mib=4096,      # Default is 512
+            memory_limit_mib=2048,      # Default is 512
             public_load_balancer=True,  # Default is False
             # TLS:
             certificate=cert,
@@ -100,20 +100,20 @@ class DockerFargateStack(Stack):
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
         load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
 
-        if False: # enable/disable autoscaling
+        if True: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(
-               min_capacity=1, # Minimum capacity to scale to. Default: 1
-               max_capacity=4 # Maximum capacity to scale to.
+               min_capacity=3, # Minimum capacity to scale to. Default: 1
+               max_capacity=15 # Maximum capacity to scale to.
             )
 
             # Add more capacity when CPU utilization reaches 50%
             scalable_target.scale_on_cpu_utilization("CpuScaling",
-                target_utilization_percent=50
+                target_utilization_percent=15
             )
 
             # Add more capacity when memory utilization reaches 50%
             scalable_target.scale_on_memory_utilization("MemoryScaling",
-                target_utilization_percent=50
+                target_utilization_percent=15
             )
 
             # Other metrics to drive scaling are discussed here:

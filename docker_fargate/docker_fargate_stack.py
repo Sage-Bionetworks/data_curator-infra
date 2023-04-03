@@ -85,10 +85,10 @@ class DockerFargateStack(Stack):
             f'{stack_prefix}-Service',
             cluster=cluster,            # Required
             cpu=256,                    # Default is 256
-            desired_count=3,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
+            desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
             circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True), # Enable rollback on deployment failure
             task_image_options=task_image_options,
-            memory_limit_mib=2048,      # Default is 512
+            memory_limit_mib=1024,      # Default is 512
             public_load_balancer=True,  # Default is False
             # TLS:
             certificate=cert,
@@ -100,28 +100,27 @@ class DockerFargateStack(Stack):
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
         load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
 
-        if True: # enable/disable autoscaling
+        if False: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(
-               min_capacity=3, # Minimum capacity to scale to. Default: 1
-               max_capacity=15 # Maximum capacity to scale to.
+               min_capacity=1, # Minimum capacity to scale to. Default: 1
+               max_capacity=4 # Maximum capacity to scale to.
             )
 
             # Add more capacity when CPU utilization reaches 50%
             scalable_target.scale_on_cpu_utilization("CpuScaling",
-                target_utilization_percent=15
+                target_utilization_percent=50
             )
 
             # Add more capacity when memory utilization reaches 50%
             scalable_target.scale_on_memory_utilization("MemoryScaling",
-                target_utilization_percent=15
+                target_utilization_percent=50
             )
 
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
-        # Tag all resources in this Stack's scope with context tags
-        for key, value in env.get(config.TAGS_CONTEXT).items():
-            Tags.of(scope).add(key, value)
+        # Tag all resources in this Stack's scope with a cost center tag
+        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))
 
         # Export load balancer name
         lb_dns_name = load_balanced_fargate_service.load_balancer.load_balancer_dns_name

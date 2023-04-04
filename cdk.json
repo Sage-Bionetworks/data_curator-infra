@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.11-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.13-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -42,7 +42,7 @@
       "VPC_CIDR": "10.255.70.0/24"
     },
     "prod": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.11-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.13-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "COST_CENTER": "NO PROGRAM / 000000",

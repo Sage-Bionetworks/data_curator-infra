@@ -45,7 +45,7 @@ def get_port(env: dict) -> int:
 def get_desired_task_count(env: dict) -> int:
     return int(env.get(DESIRED_TASK_COUNT))
 
-def get_sticky(env: dict) -> boolean:
+def get_sticky(env: dict) -> bool:
     return env.get(STICKY).lower()=="true"
 
 

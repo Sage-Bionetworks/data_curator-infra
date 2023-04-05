@@ -41,12 +41,12 @@ def get_docker_image_name(env: dict):
 
 def get_port(env: dict) -> int:
     return int(env.get(PORT_NUMBER_CONTEXT))
-    
+
 def get_desired_task_count(env: dict) -> int:
     return int(env.get(DESIRED_TASK_COUNT))
-    
+
 def get_sticky(env: dict) -> boolean:
-	return env.get(STICKY).lower()=="true"
+    return env.get(STICKY).lower()=="true"
 
 
 class DockerFargateStack(Stack):
@@ -108,7 +108,7 @@ class DockerFargateStack(Stack):
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
         load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
         if get_sticky():
-        	load_balanced_fargate_service.target_group.enable_cookie_stickiness(Duration.days(1), cookie_name=None)
+            load_balanced_fargate_service.target_group.enable_cookie_stickiness(Duration.days(1), cookie_name=None)
 
         if False: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(

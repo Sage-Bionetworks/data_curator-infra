@@ -44,7 +44,7 @@
       "DESIRED_TASK_COUNT":"1"
     },
     "dev-no-sticky": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.13-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v0.3.5-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -54,10 +54,10 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:631692904429:certificate/8644a975-2c1d-49ca-bc73-786745db0bc8",
       "VPC_CIDR": "10.255.72.0/24",
       "STICKY":"FALSE",
-      "DESIRED_TASK_COUNT":"2"
+      "DESIRED_TASK_COUNT":"3"
     },
     "dev-sticky": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.13-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v0.3.5-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -67,7 +67,7 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:631692904429:certificate/8644a975-2c1d-49ca-bc73-786745db0bc8",
       "VPC_CIDR": "10.255.73.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"2"
+      "DESIRED_TASK_COUNT":"3"
     },
     "prod": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.13-beta",

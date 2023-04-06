@@ -44,7 +44,7 @@
       "DESIRED_TASK_COUNT":"1"
     },
     "dev-no-sticky": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v0.3.5-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.5-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -57,7 +57,7 @@
       "DESIRED_TASK_COUNT":"3"
     },
     "dev-sticky": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v0.3.5-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.5-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {

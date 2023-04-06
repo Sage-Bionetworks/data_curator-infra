@@ -63,6 +63,20 @@ jobs:
           cdk_args: '--require-approval never --context env=dev --progress events --debug'
           actions_comment: false
 
+      - name: cdk deploy to org-sagebase-dnt-dev NO-STICKY (631692904429)
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never --context env=dev-no-sticky --progress events --debug'
+          actions_comment: false
+
+      - name: cdk deploy to org-sagebase-dnt-dev STICKY (631692904429)
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never --context env=dev-sticky --progress events --debug'
+          actions_comment: false
+
   cdk-deploy-prod:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/prod' }}

@@ -16,6 +16,8 @@ from constructs import Construct
 ACM_CERT_ARN_CONTEXT = "ACM_CERT_ARN"
 IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
 PORT_NUMBER_CONTEXT = "PORT"
+STICKY = "STICKY"
+DESIRED_TASK_COUNT="DESIRED_TASK_COUNT"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -39,6 +41,12 @@ def get_docker_image_name(env: dict):
 
 def get_port(env: dict) -> int:
     return int(env.get(PORT_NUMBER_CONTEXT))
+
+def get_desired_task_count(env: dict) -> int:
+    return int(env.get(DESIRED_TASK_COUNT))
+
+def get_sticky(env: dict) -> bool:
+    return env.get(STICKY).lower()=="true"
 
 
 class DockerFargateStack(Stack):
@@ -84,11 +92,11 @@ class DockerFargateStack(Stack):
             self,
             f'{stack_prefix}-Service',
             cluster=cluster,            # Required
-            cpu=256,                    # Default is 256
-            desired_count=1,            # Number of copies of the 'task' (i.e. the app') running behind the ALB
+            cpu=512,                    # Default is 256
+            desired_count=get_desired_task_count(env), # Number of copies of the 'task' (i.e. the app') running behind the ALB
             circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True), # Enable rollback on deployment failure
             task_image_options=task_image_options,
-            memory_limit_mib=1024,      # Default is 512
+            memory_limit_mib=2048,      # Default is 512
             public_load_balancer=True,  # Default is False
             # TLS:
             certificate=cert,
@@ -99,28 +107,31 @@ class DockerFargateStack(Stack):
         # Overriding health check timeout helps with sluggishly responding app's (e.g. Shiny)
         # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_elasticloadbalancingv2/ApplicationTargetGroup.html#aws_cdk.aws_elasticloadbalancingv2.ApplicationTargetGroup
         load_balanced_fargate_service.target_group.configure_health_check(interval=Duration.seconds(120), timeout=Duration.seconds(60))
+        if get_sticky(env):
+            load_balanced_fargate_service.target_group.enable_cookie_stickiness(Duration.days(1), cookie_name=None)
 
         if False: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(
-               min_capacity=1, # Minimum capacity to scale to. Default: 1
-               max_capacity=4 # Maximum capacity to scale to.
+               min_capacity=3, # Minimum capacity to scale to. Default: 1
+               max_capacity=15 # Maximum capacity to scale to.
             )
 
             # Add more capacity when CPU utilization reaches 50%
             scalable_target.scale_on_cpu_utilization("CpuScaling",
-                target_utilization_percent=50
+                target_utilization_percent=15
             )
 
             # Add more capacity when memory utilization reaches 50%
             scalable_target.scale_on_memory_utilization("MemoryScaling",
-                target_utilization_percent=50
+                target_utilization_percent=15
             )
 
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
 
-        # Tag all resources in this Stack's scope with a cost center tag
-        Tags.of(scope).add(config.COST_CENTER_CONTEXT, env.get(config.COST_CENTER_CONTEXT))
+        # Tag all resources in this Stack's scope with context tags
+        for key, value in env.get(config.TAGS_CONTEXT).items():
+            Tags.of(scope).add(key, value)
 
         # Export load balancer name
         lb_dns_name = load_balanced_fargate_service.load_balancer.load_balancer_dns_name

@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.30-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.4.2-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -44,7 +44,7 @@
       "DESIRED_TASK_COUNT":"2"
     },
     "prod": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.3.30-beta",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.4.2-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {

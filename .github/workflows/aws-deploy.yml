@@ -52,7 +52,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-1KD3QGJEFWP7M
+          role-to-assume: arn:aws:iam::631692904429:role/sagebase-github-oidc-sage-ProviderRole
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
 
@@ -81,7 +81,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::878654265857:role/sagebase-github-oidc-sage-ProviderRoledatacuratori-KZJPUIC0RY0P
+          role-to-assume: arn:aws:iam::878654265857:role/sagebase-github-oidc-sage-ProviderRole
           role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
           role-duration-seconds: 1200
 

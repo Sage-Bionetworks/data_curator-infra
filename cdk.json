@@ -52,7 +52,7 @@
       },
       "STACK_NAME_PREFIX": "dca-staging",
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:878654265857:certificate/a3b7c804-c1fc-4e58-bbc6-541ef2d65816",
-      "VPC_CIDR": "10.255.71.0/24",
+      "VPC_CIDR": "10.255.72.0/24",
       "STICKY":"TRUE",
       "DESIRED_TASK_COUNT":"2"
     },

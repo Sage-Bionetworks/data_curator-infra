@@ -63,6 +63,35 @@ jobs:
           cdk_args: '--require-approval never --context env=dev --progress events --debug'
           actions_comment: false
 
+  cdk-deploy-staging:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/staging' }}
+    needs: tests
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+        # Authenticate to AWS using GitHub OIDC
+      - name: Assume AWS Role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::878654265857:role/sagebase-github-oidc-sage-bionetworks-data-curator-infra
+          role-session-name: GitHubActions-${{ github.repository_owner }}-${{ github.event.repository.name }}-${{ github.run_id }}
+          role-duration-seconds: 1200
+
+      - name: cdk deploy to org-sagebase-dca-prod (878654265857)
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never --context env=prod --progress events --debug'
+          actions_comment: false
+
   cdk-deploy-prod:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/prod' }}

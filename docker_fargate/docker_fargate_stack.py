@@ -133,7 +133,7 @@ class DockerFargateStack(Stack):
             # Add more capacity when active connections increase
             active_connection_metric = cloudwatch.Metric(
                 namespace = "AWS/ApplicationELB",
-                metric_name="ActiveConnectionCount"
+                metric_name="ActiveConnectionCount",
                 period="60",
                 statistic="AVERAGE",
                 unit="COUNT"

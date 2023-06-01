@@ -129,7 +129,6 @@ class DockerFargateStack(Stack):
 
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
-            
             # Add more capacity when active connections increase
             active_connection_metric = cloudwatch.Metric(
                 namespace = "AWS/ApplicationELB",

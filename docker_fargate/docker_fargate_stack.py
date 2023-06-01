@@ -134,6 +134,9 @@ class DockerFargateStack(Stack):
             active_connection_metric = cloudwatch.Metric(
                 namespace = "AWS/ApplicationELB",
                 metric_name="ActiveConnectionCount"
+                period="60",
+                statistic="AVERAGE",
+                unit="COUNT"
             )
 
             scalable_target.scale_on_metric("ScaleToActiveConnection",

@@ -4,6 +4,7 @@ from aws_cdk import (Stack,
     aws_ecs_patterns as ecs_patterns,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
+    aws_cloudwatch as cloudwatch,
     CfnOutput,
     Duration,
     Tags)

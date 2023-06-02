@@ -137,7 +137,7 @@ class DockerFargateStack(Stack):
                 metric_name="ActiveConnectionCount",
                 period=Duration.seconds(60),
                 statistic="AVERAGE",
-                unit=cloudwatch.Unit("COUNT")
+                dimensions_map={ "LoadBalancer": load_balanced_fargate_service.load_balancer.load_balancer_full_name }
             )
 
             scalable_target.scale_on_metric("ScaleToActiveConnection",

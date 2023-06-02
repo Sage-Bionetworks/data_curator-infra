@@ -4,6 +4,8 @@ from aws_cdk import (Stack,
     aws_ecs_patterns as ecs_patterns,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
+    aws_cloudwatch as cloudwatch,
+    aws_applicationautoscaling as autoscaling,
     CfnOutput,
     Duration,
     Tags)
@@ -129,6 +131,25 @@ class DockerFargateStack(Stack):
 
             # Other metrics to drive scaling are discussed here:
             # https://docs.aws.amazon.com/cdk/api/v1/python/aws_cdk.aws_autoscaling/README.html
+            # Add more capacity when active connections increase
+            active_connection_metric = cloudwatch.Metric(
+                namespace = "AWS/ApplicationELB",
+                metric_name="ActiveConnectionCount",
+                period=Duration.seconds(60),
+                statistic="AVERAGE",
+                unit=cloudwatch.Unit("COUNT")
+            )
+
+            scalable_target.scale_on_metric("ScaleToActiveConnection",
+                metric=active_connection_metric,
+                scaling_steps=[
+                    autoscaling.ScalingInterval(lower=0, change=-1),
+                    autoscaling.ScalingInterval(lower=3, change=+1),
+                    autoscaling.ScalingInterval(lower=6, change=+2),
+                    autoscaling.ScalingInterval(lower=9, change=+3)
+                ],
+                adjustment_type=autoscaling.AdjustmentType.CHANGE_IN_CAPACITY
+            )
 
         # Tag all resources in this Stack's scope with context tags
         for key, value in env.get(config.TAGS_CONTEXT).items():

@@ -142,7 +142,11 @@ class DockerFargateStack(Stack):
 
             scalable_target.scale_on_metric("ScaleToActiveConnection",
                 metric=active_connection_metric,
-                scaling_steps=[autoscaling.ScalingInterval(lower=3, change=+1), autoscaling.ScalingInterval(lower=6, change=+2), autoscaling.ScalingInterval(lower=9, change=+3)
+                scaling_steps=[
+                    autoscaling.ScalingInterval(lower=0, change=-1),
+                    autoscaling.ScalingInterval(lower=3, change=+1),
+                    autoscaling.ScalingInterval(lower=6, change=+2),
+                    autoscaling.ScalingInterval(lower=9, change=+3)
                 ],
                 adjustment_type=autoscaling.AdjustmentType.CHANGE_IN_CAPACITY
             )

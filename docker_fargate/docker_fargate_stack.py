@@ -5,6 +5,7 @@ from aws_cdk import (Stack,
     aws_elasticloadbalancingv2 as elbv2,
     aws_route53 as r53,
     aws_cloudwatch as cloudwatch,
+    aws_applicationautoscaling as autoscaling,
     CfnOutput,
     Duration,
     Tags)

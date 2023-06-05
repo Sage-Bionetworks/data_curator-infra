@@ -20,6 +20,8 @@ IMAGE_PATH_AND_TAG_CONTEXT = "IMAGE_PATH_AND_TAG"
 PORT_NUMBER_CONTEXT = "PORT"
 STICKY = "STICKY"
 DESIRED_TASK_COUNT="DESIRED_TASK_COUNT"
+MIN_INSTANCE_COUNT="MIN_INSTANCE_COUNT"
+MAX_INSTANCE_COUNT="MAX_INSTANCE_COUNT"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -50,6 +52,11 @@ def get_desired_task_count(env: dict) -> int:
 def get_sticky(env: dict) -> bool:
     return env.get(STICKY).lower()=="true"
 
+def get_min_instance_count(env: dict) -> int:
+    return int(env.get(MIN_INSTANCE_COUNT))
+
+def get_max_instance_count(env: dict) -> int:
+    return int(env.get(MAX_INSTANCE_COUNT))
 
 class DockerFargateStack(Stack):
 
@@ -115,8 +122,8 @@ class DockerFargateStack(Stack):
 
         if True: # enable/disable autoscaling
             scalable_target = load_balanced_fargate_service.service.auto_scale_task_count(
-               min_capacity=2, # Minimum capacity to scale to. Default: 1
-               max_capacity=8 # Maximum capacity to scale to.
+               min_capacity=get_min_capacity_count(env), # Minimum capacity to scale to. Default: 1
+               max_capacity=get_max_capacity_count(env) # Maximum capacity to scale to.
             )
 
             # Add more capacity when CPU utilization reaches 50%

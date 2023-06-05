@@ -41,7 +41,9 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:631692904429:certificate/8644a975-2c1d-49ca-bc73-786745db0bc8",
       "VPC_CIDR": "10.255.70.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"2"
+      "DESIRED_TASK_COUNT":"2",
+      "MIN_INSTANCE_COUNT":"2",
+      "MAX_INSTANCE_COUNT":"8"
     },
     "staging": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.4.12-beta",
@@ -54,7 +56,9 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:878654265857:certificate/a3b7c804-c1fc-4e58-bbc6-541ef2d65816",
       "VPC_CIDR": "10.255.72.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"2"
+      "DESIRED_TASK_COUNT":"2",
+      "MIN_INSTANCE_COUNT":"2",
+      "MAX_INSTANCE_COUNT":"8"
     },
     "prod": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:0.4.12-beta",
@@ -67,7 +71,9 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:878654265857:certificate/a3b7c804-c1fc-4e58-bbc6-541ef2d65816",
       "VPC_CIDR": "10.255.71.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"2"
+      "DESIRED_TASK_COUNT":"2",
+      "MIN_INSTANCE_COUNT":"2",
+      "MAX_INSTANCE_COUNT":"8"
     }
   }
 }

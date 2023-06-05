@@ -22,6 +22,8 @@ STICKY = "STICKY"
 DESIRED_TASK_COUNT="DESIRED_TASK_COUNT"
 MIN_INSTANCE_COUNT="MIN_INSTANCE_COUNT"
 MAX_INSTANCE_COUNT="MAX_INSTANCE_COUNT"
+CPU_SIZE="CPU_SIZE"
+MEMORY_SIZE="MEMORY_SIZE"
 
 # The name of the environment variable that will hold the secrets
 SECRETS_MANAGER_ENV_NAME = "SECRETS_MANAGER_SECRETS"
@@ -57,6 +59,12 @@ def get_min_instance_count(env: dict) -> int:
 
 def get_max_instance_count(env: dict) -> int:
     return int(env.get(MAX_INSTANCE_COUNT))
+
+def get_cpu_size(env: dict) -> int:
+    return int(env.get(CPU_SIZE))
+
+def get_memory_size(env: dict) -> int:
+    return int(env.get(MEMORY_SIZE))
 
 class DockerFargateStack(Stack):
 
@@ -101,11 +109,11 @@ class DockerFargateStack(Stack):
             self,
             f'{stack_prefix}-Service',
             cluster=cluster,            # Required
-            cpu=256,                    # Default is 256
+            cpu=get_cpu_size(env),                    # Default is 256
             desired_count=get_desired_task_count(env), # Number of copies of the 'task' (i.e. the app') running behind the ALB
             circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True), # Enable rollback on deployment failure
             task_image_options=task_image_options,
-            memory_limit_mib=1024,      # Default is 512
+            memory_limit_mib=get_memory_size(env),      # Default is 512
             public_load_balancer=True,  # Default is False
             redirect_http=True,
             # TLS:

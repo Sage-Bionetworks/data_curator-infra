@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:dev-fds780-file-upload",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v23.8.1-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -48,7 +48,7 @@
       "MEMORY_SIZE":"1024"
     },
     "staging": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:dev-fds780-file-upload",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v23.8.1-beta",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {

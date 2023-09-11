@@ -42,7 +42,7 @@
       "VPC_CIDR": "10.255.70.0/24",
       "STICKY":"TRUE",
       "DESIRED_TASK_COUNT":"1",
-      "MIN_INSTANCE_COUNT":1",
+      "MIN_INSTANCE_COUNT":"1",
       "MAX_INSTANCE_COUNT":"1",
       "CPU_SIZE":"512",
       "MEMORY_SIZE":"1024"

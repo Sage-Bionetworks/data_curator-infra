@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:23.9.1-beta-shinyloadtest.5",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:data_curator:23.9.1-beta.2",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -41,9 +41,9 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:631692904429:certificate/8644a975-2c1d-49ca-bc73-786745db0bc8",
       "VPC_CIDR": "10.255.70.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"25",
-      "MIN_INSTANCE_COUNT":"25",
-      "MAX_INSTANCE_COUNT":"25",
+      "DESIRED_TASK_COUNT":"1",
+      "MIN_INSTANCE_COUNT":"1",
+      "MAX_INSTANCE_COUNT":"1",
       "CPU_SIZE":"512",
       "MEMORY_SIZE":"1024"
     },

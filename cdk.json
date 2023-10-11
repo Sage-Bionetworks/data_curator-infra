@@ -75,9 +75,9 @@
       "ACM_CERT_ARN": "arn:aws:acm:us-east-1:878654265857:certificate/a3b7c804-c1fc-4e58-bbc6-541ef2d65816",
       "VPC_CIDR": "10.255.71.0/24",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"30",
-      "MIN_INSTANCE_COUNT":"30",
-      "MAX_INSTANCE_COUNT":"30",
+      "DESIRED_TASK_COUNT":"2",
+      "MIN_INSTANCE_COUNT":"2",
+      "MAX_INSTANCE_COUNT":"8",
       "CPU_SIZE":"512",
       "MEMORY_SIZE":"1024"
     }

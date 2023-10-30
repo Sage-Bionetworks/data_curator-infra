@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v23.10.1",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v23.11.1-beta.1",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {

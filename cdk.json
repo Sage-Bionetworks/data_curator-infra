@@ -45,7 +45,7 @@
       "MIN_INSTANCE_COUNT":"1",
       "MAX_INSTANCE_COUNT":"1",
       "CPU_SIZE":"512",
-      "MEMORY_SIZE":"1024"
+      "MEMORY_SIZE":"2048"
     },
     "staging": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:24.2.1-beta.13",

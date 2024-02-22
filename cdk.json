@@ -31,7 +31,7 @@
       "aws-cn"
     ],
     "dev": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:24.2.1-beta.12",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:24.2.1-beta.13",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {
@@ -45,7 +45,7 @@
       "MIN_INSTANCE_COUNT":"1",
       "MAX_INSTANCE_COUNT":"1",
       "CPU_SIZE":"512",
-      "MEMORY_SIZE":"2048"
+      "MEMORY_SIZE":"4096"
     },
     "staging": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:24.2.1-beta.13",
@@ -62,7 +62,7 @@
       "MIN_INSTANCE_COUNT":"2",
       "MAX_INSTANCE_COUNT":"4",
       "CPU_SIZE":"512",
-      "MEMORY_SIZE":"1024"
+      "MEMORY_SIZE":"2048"
     },
     "prod": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v24.1.2",

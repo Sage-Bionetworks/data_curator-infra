@@ -48,7 +48,7 @@
       "MEMORY_SIZE":"4096"
     },
     "staging": {
-      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v24.5.1",
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:24.6.1-rc.2",
       "AWS_DEFAULT_REGION": "us-east-1",
       "PORT": "3838",
       "TAGS": {

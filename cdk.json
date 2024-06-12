@@ -64,6 +64,23 @@
       "CPU_SIZE":"512",
       "MEMORY_SIZE":"2048"
     },
+    "testing": {
+      "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v24.5.1",
+      "AWS_DEFAULT_REGION": "us-east-1",
+      "PORT": "3838",
+      "TAGS": {
+        "CostCenter": "NO PROGRAM / 000000"
+      },
+      "STACK_NAME_PREFIX": "dca-testing",
+      "ACM_CERT_ARN": "TBD",
+      "VPC_CIDR": "TBD",
+      "STICKY":"TRUE",
+      "DESIRED_TASK_COUNT":"2",
+      "MIN_INSTANCE_COUNT":"2",
+      "MAX_INSTANCE_COUNT":"8",
+      "CPU_SIZE":"512",
+      "MEMORY_SIZE":"1024"
+    },
     "prod": {
       "IMAGE_PATH_AND_TAG": "ghcr.io/sage-bionetworks/data_curator:v24.5.1",
       "AWS_DEFAULT_REGION": "us-east-1",

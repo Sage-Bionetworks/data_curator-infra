@@ -75,9 +75,9 @@
       "ACM_CERT_ARN": "TBD",
       "VPC_CIDR": "TBD",
       "STICKY":"TRUE",
-      "DESIRED_TASK_COUNT":"2",
-      "MIN_INSTANCE_COUNT":"2",
-      "MAX_INSTANCE_COUNT":"8",
+      "DESIRED_TASK_COUNT":"1",
+      "MIN_INSTANCE_COUNT":"1",
+      "MAX_INSTANCE_COUNT":"2",
       "CPU_SIZE":"512",
       "MEMORY_SIZE":"1024"
     },

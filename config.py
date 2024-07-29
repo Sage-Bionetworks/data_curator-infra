@@ -1,4 +1,4 @@
 
-CONTEXT_ENVS = ["dev", "prod", "staging"]
+CONTEXT_ENVS = ["dev", "prod", "staging", "testing"]
 TAGS_CONTEXT = "TAGS"
 STACK_NAME_PREFIX_CONTEXT = "STACK_NAME_PREFIX"
